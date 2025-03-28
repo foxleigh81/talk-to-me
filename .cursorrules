@@ -8,6 +8,7 @@
 - Ensure all comments and documentation follow British English spelling and conventions.
 - All functional code must have accompanying robust tests, we are using Vitest and React testing library
 - Components should be contained in a folder which has the components name and the code should be in an index.tsx file, any stylesheets for that component should be called style.css and be inside the folder with the component and any tests for the component should also be contained inside that components folder.
+- Always remember that this is intended to be a distributable NPM package and not a runnable application in it's own right.
 
 ## Security Rules
 
@@ -19,6 +20,7 @@
 - Keep components modular and single-purpose.
 - All Supabase interactions should be encapsulated within dedicated reusable functions or hooks.
 - Always wrap external plugin hooks (`onBeforePost`, `onApprove`, etc.) in `try-catch` blocks.
+- TypeScript has an alias for the 'src/libs' folder within the `talk-to-me` package, please favour using this over relative paths.
 
 ## UX and Accessibility
 
