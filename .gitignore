@@ -40,3 +40,6 @@ coverage
 .vitest
 __snapshots__/
 *.snap
+
+# Supabase
+apps/demo-site/supabase
