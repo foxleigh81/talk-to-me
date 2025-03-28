@@ -1,9 +1,6 @@
-import { User, SupabaseClient } from '@supabase/supabase-js'
-
-export type SocialProvider = 'facebook' | 'google' | 'linkedin' | 'github'
+import { User, SupabaseClient, Provider } from '@supabase/supabase-js'
 
 export interface TalkToMeConfig {
-  socialProviders: SocialProvider[]
   themeColour: string
   darkMode: boolean
   moderationBadgePosition?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left'
@@ -14,7 +11,7 @@ export interface TalkToMeContextType {
   isAdmin: boolean
   config: TalkToMeConfig
   supabase: SupabaseClient
-  login: (provider: SocialProvider) => Promise<void>
+  login: (provider: Provider) => Promise<void>
   loginWithEmail: (email: string) => Promise<void>
   logout: () => Promise<void>
   isLoading: boolean

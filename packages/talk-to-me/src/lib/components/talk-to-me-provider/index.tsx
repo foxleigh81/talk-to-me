@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { createClient, SupabaseClient, User } from '@supabase/supabase-js'
+import { createClient, SupabaseClient, User, Provider } from '@supabase/supabase-js'
 import { TalkToMeContext } from '@lib/context/talk-to-me-context'
 import { TalkToMeProviderProps } from '@lib/types/context'
 import { AuthService } from '@lib/auth'
@@ -61,11 +61,11 @@ export const TalkToMeProvider = ({
     return () => subscription.unsubscribe()
   }, [supabase.auth, authService])
 
-  const login = async (provider: string) => {
+  const login = async (provider: Provider) => {
     try {
       setIsLoading(true)
       setError(null)
-      const { error } = await authService.signInWithSocial(provider as any)
+      const { error } = await authService.signInWithSocial(provider)
       if (error) throw error
     } catch (err) {
       setError(err instanceof Error ? err : new Error('An error occurred during login'))

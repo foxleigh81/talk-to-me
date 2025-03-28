@@ -1,7 +1,6 @@
 import { render, screen, act } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { AuthService } from '@lib/auth'
-import { SocialProvider } from '@lib/types/context'
 import { TalkToMeProvider } from '.'
 import { TalkToMeContext } from '@lib/context/talk-to-me-context'
 import { useContext } from 'react'
@@ -47,8 +46,6 @@ describe('TalkToMeProvider', () => {
   const mockConfig = {
     supabaseUrl: 'https://test.supabase.co',
     supabaseKey: 'test-key',
-    adminEmails: ['admin@example.com'],
-    socialProviders: ['google', 'facebook'] as SocialProvider[],
     themeColour: '#000000',
     darkMode: false,
   }

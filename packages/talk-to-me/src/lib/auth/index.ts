@@ -1,5 +1,4 @@
-import { SupabaseClient, User } from '@supabase/supabase-js'
-import { SocialProvider } from '@lib/types/context'
+import { SupabaseClient, User, Provider } from '@supabase/supabase-js'
 import md5 from 'md5'
 
 export interface AuthError extends Error {
@@ -32,7 +31,7 @@ export class AuthService {
     }
   }
 
-  async signInWithSocial(provider: SocialProvider): Promise<AuthResponse> {
+  async signInWithSocial(provider: Provider): Promise<AuthResponse> {
     try {
       const { error } = await this.supabase.auth.signInWithOAuth({
         provider,

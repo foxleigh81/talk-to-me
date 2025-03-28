@@ -23,8 +23,6 @@ describe('TalkToMe', () => {
   }
 
   const mockConfig: TalkToMeConfig = {
-    adminEmails: ['admin@example.com'],
-    socialProviders: ['google'],
     themeColour: '#000000',
     darkMode: false
   }

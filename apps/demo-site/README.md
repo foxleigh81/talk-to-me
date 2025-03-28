@@ -38,6 +38,17 @@ The following environment variables are required:
 - `VITE_SUPABASE_ANON_KEY`: Your Supabase anonymous key for client-side auth
 - `VITE_ADMIN_EMAIL`: Email address that will have admin privileges
 
+## Social Sign-in Configuration
+
+The Talk To Me package supports social sign-in through Supabase. To enable social sign-in providers:
+
+1. Go to your Supabase project dashboard
+2. Navigate to Authentication > Sign In/Up
+3. Enable and configure your desired social sign-in providers (e.g., Google, GitHub, Facebook, etc.)
+4. Each provider will require you to set up OAuth credentials in their respective developer consoles
+
+The package will automatically support any social sign-in providers you enable in your Supabase dashboard.
+
 ## Using the Real Package
 
 This demo currently uses mock components for development. To use the real `talk-to-me` package:
