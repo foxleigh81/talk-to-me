@@ -1,0 +1,48 @@
+.t-t-m-comment-input-form {
+  margin: 1rem 0;
+}
+
+.t-t-m-comment-input {
+  width: 100%;
+  min-height: 100px;
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  resize: vertical;
+  margin-bottom: 0.5rem;
+}
+
+.t-t-m-comment-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.t-t-m-submit-button {
+  background-color: #3b82f6;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.t-t-m-submit-button:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.t-t-m-submit-button:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.t-t-m-error {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
