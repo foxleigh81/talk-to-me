@@ -3,7 +3,6 @@ import { User, SupabaseClient } from '@supabase/supabase-js'
 export type SocialProvider = 'facebook' | 'google' | 'linkedin' | 'github'
 
 export interface TalkToMeConfig {
-  adminEmails: string[]
   socialProviders: SocialProvider[]
   themeColour: string
   darkMode: boolean

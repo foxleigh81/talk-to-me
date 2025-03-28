@@ -27,7 +27,7 @@ export const TalkToMeProvider = ({
       } else {
         setUser(user)
         if (user) {
-          authService.checkAdminStatus(user, config.adminEmails).then(setIsAdmin)
+          authService.checkAdminStatus(user).then(setIsAdmin)
           // Sync user to custom users table
           supabase.functions.invoke('sync-user').catch((err) => {
             console.error('Failed to sync user:', err)
@@ -44,7 +44,7 @@ export const TalkToMeProvider = ({
       const currentUser = session?.user ?? null
       setUser(currentUser)
       if (currentUser) {
-        const adminStatus = await authService.checkAdminStatus(currentUser, config.adminEmails)
+        const adminStatus = await authService.checkAdminStatus(currentUser)
         setIsAdmin(adminStatus)
         // Sync user to custom users table on sign in
         if (_event === 'SIGNED_IN') {
@@ -59,7 +59,7 @@ export const TalkToMeProvider = ({
     })
 
     return () => subscription.unsubscribe()
-  }, [supabase.auth, authService, config.adminEmails])
+  }, [supabase.auth, authService])
 
   const login = async (provider: string) => {
     try {
