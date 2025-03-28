@@ -2,20 +2,86 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 1rem;
-  font-family: 'Sora', sans-serif;
+  font-family: var(--t-t-m-font-family, 'Sora', system-ui, -apple-system, sans-serif);
 }
 
 .t-t-m-loading {
   text-align: center;
   padding: 2rem;
-  color: #64748b;
+  color: var(--t-t-m-text-secondary, #6c757d);
+  font-size: 1rem;
 }
 
 .t-t-m-login-prompt {
   text-align: center;
   padding: 1rem;
-  background-color: #f1f5f9;
-  border-radius: 0.375rem;
-  color: #64748b;
-  margin-top: 1rem;
+  background-color: var(--t-t-m-bg-info, #cff4fc);
+  border: 1px solid var(--t-t-m-info-color, #0dcaf0);
+  border-radius: 0.5rem;
+  color: var(--t-t-m-text-info, #055160);
+  font-size: 0.875rem;
+}
+
+.t-t-m-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .t-t-m-container {
+    --t-t-m-bg-primary: #1a1a1a;
+    --t-t-m-bg-secondary: #2d2d2d;
+    --t-t-m-bg-disabled: #404040;
+    --t-t-m-text-primary: #ffffff;
+    --t-t-m-text-secondary: #b3b3b3;
+    --t-t-m-text-disabled: #808080;
+    --t-t-m-border-color: #404040;
+    --t-t-m-primary-color: #3b82f6;
+    --t-t-m-primary-hover: #2563eb;
+    --t-t-m-primary-focus: rgba(59, 130, 246, 0.25);
+    --t-t-m-danger-color: #ef4444;
+    --t-t-m-danger-hover: #dc2626;
+    --t-t-m-danger-focus: rgba(239, 68, 68, 0.25);
+    --t-t-m-success-color: #22c55e;
+    --t-t-m-success-hover: #16a34a;
+    --t-t-m-warning-color: #f59e0b;
+    --t-t-m-bg-warning: #78350f;
+    --t-t-m-bg-info: #0c4a6e;
+    --t-t-m-info-color: #0ea5e9;
+    --t-t-m-text-info: #e0f2fe;
+  }
+}
+
+/* High contrast mode support */
+@media (forced-colors: active) {
+  .t-t-m-container {
+    --t-t-m-bg-primary: Canvas;
+    --t-t-m-bg-secondary: Canvas;
+    --t-t-m-bg-disabled: GrayText;
+    --t-t-m-text-primary: CanvasText;
+    --t-t-m-text-secondary: CanvasText;
+    --t-t-m-text-disabled: GrayText;
+    --t-t-m-border-color: CanvasText;
+    --t-t-m-primary-color: Highlight;
+    --t-t-m-primary-hover: Highlight;
+    --t-t-m-primary-focus: Highlight;
+    --t-t-m-danger-color: LinkText;
+    --t-t-m-danger-hover: LinkText;
+    --t-t-m-danger-focus: LinkText;
+    --t-t-m-success-color: Highlight;
+    --t-t-m-success-hover: Highlight;
+    --t-t-m-warning-color: LinkText;
+    --t-t-m-bg-warning: Canvas;
+    --t-t-m-bg-info: Canvas;
+    --t-t-m-info-color: LinkText;
+    --t-t-m-text-info: CanvasText;
+  }
 }

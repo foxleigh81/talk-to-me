@@ -1,9 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useTalkToMe } from '@lib/hooks/use-talk-to-me'
 import { CommentInput } from './comment-input'
 import { CommentList } from './comment-list'
 import { Comment, TalkToMeProps } from '@lib/types/component'
 import { RealtimePostgresChangesPayload } from '@supabase/supabase-js'
+import { sanitizeComment, validateComment, isRateLimited } from '@lib/utils/security'
+import { paginateComments, cacheComments, getCachedComments } from '@lib/utils/performance'
+import { retry, getErrorMessage, TalkToMeError } from '@lib/utils/error'
+import { getAriaLabel, getAriaDescribedBy, announceToScreenReader } from '@lib/utils/accessibility'
 import './style.css'
 
 export const TalkToMe = ({ postId, className = '' }: TalkToMeProps) => {
@@ -12,6 +16,9 @@ export const TalkToMe = ({ postId, className = '' }: TalkToMeProps) => {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [hasMore, setHasMore] = useState(false)
+  const lastSubmissionTime = useRef<number>(0)
 
   useEffect(() => {
     loadComments()
@@ -30,6 +37,7 @@ export const TalkToMe = ({ postId, className = '' }: TalkToMeProps) => {
         (payload: RealtimePostgresChangesPayload<Comment>) => {
           if (payload.eventType === 'INSERT') {
             setComments((prev) => [...prev, payload.new])
+            announceToScreenReader('New comment received')
           } else if (payload.eventType === 'UPDATE') {
             setComments((prev) =>
               prev.map((comment) =>
@@ -53,17 +61,32 @@ export const TalkToMe = ({ postId, className = '' }: TalkToMeProps) => {
       setIsLoading(true)
       setError(null)
 
-      const { data, error } = await supabase
-        .from('comments')
-        .select('*, author:users(*)')
-        .eq('post_id', postId)
-        .order('created_at', { ascending: true })
+      // Try to get cached comments first
+      const cachedComments = getCachedComments(postId)
+      if (cachedComments) {
+        setComments(cachedComments)
+        setIsLoading(false)
+        return
+      }
+
+      const { data, error } = await retry(async () => {
+        const result = await supabase
+          .from('comments')
+          .select('*, author:users(*)')
+          .eq('post_id', postId)
+          .order('created_at', { ascending: true })
+        return result
+      })
 
       if (error) throw error
 
-      setComments(data as Comment[])
+      const loadedComments = data as Comment[]
+      setComments(loadedComments)
+      cacheComments(postId, loadedComments)
     } catch (err) {
-      setError(err instanceof Error ? err : new Error('Failed to load comments'))
+      const error = err instanceof Error ? err : new Error('Failed to load comments')
+      setError(error)
+      announceToScreenReader(getErrorMessage(error), 'assertive')
     } finally {
       setIsLoading(false)
     }
@@ -73,19 +96,43 @@ export const TalkToMe = ({ postId, className = '' }: TalkToMeProps) => {
     if (!user) return
 
     try {
+      // Validate and sanitize content
+      const validation = validateComment(content)
+      if (!validation.isValid) {
+        throw new TalkToMeError(validation.error || 'Invalid comment', 'VALIDATION_ERROR')
+      }
+
+      // Check rate limiting
+      if (isRateLimited(lastSubmissionTime.current)) {
+        throw new TalkToMeError(
+          'Please wait a moment before posting another comment',
+          'RATE_LIMIT_ERROR'
+        )
+      }
+
       setIsSubmitting(true)
       setError(null)
 
-      const { error } = await supabase.from('comments').insert({
-        post_id: postId,
-        author_id: user.id,
-        content,
-        status: 'pending'
+      const sanitizedContent = sanitizeComment(content)
+
+      const { error } = await retry(async () => {
+        const result = await supabase.from('comments').insert({
+          post_id: postId,
+          author_id: user.id,
+          content: sanitizedContent,
+          status: 'pending'
+        })
+        return result
       })
 
       if (error) throw error
+
+      lastSubmissionTime.current = Date.now()
+      announceToScreenReader('Comment submitted successfully')
     } catch (err) {
-      setError(err instanceof Error ? err : new Error('Failed to post comment'))
+      const error = err instanceof Error ? err : new Error('Failed to post comment')
+      setError(error)
+      announceToScreenReader(getErrorMessage(error), 'assertive')
     } finally {
       setIsSubmitting(false)
     }
@@ -94,28 +141,40 @@ export const TalkToMe = ({ postId, className = '' }: TalkToMeProps) => {
   const handleApprove = async (commentId: string) => {
     try {
       setError(null)
-      const { error } = await supabase
-        .from('comments')
-        .update({ status: 'approved' })
-        .eq('id', commentId)
+      const { error } = await retry(async () => {
+        const result = await supabase
+          .from('comments')
+          .update({ status: 'approved' })
+          .eq('id', commentId)
+        return result
+      })
 
       if (error) throw error
+      announceToScreenReader('Comment approved')
     } catch (err) {
-      setError(err instanceof Error ? err : new Error('Failed to approve comment'))
+      const error = err instanceof Error ? err : new Error('Failed to approve comment')
+      setError(error)
+      announceToScreenReader(getErrorMessage(error), 'assertive')
     }
   }
 
   const handleReject = async (commentId: string) => {
     try {
       setError(null)
-      const { error } = await supabase
-        .from('comments')
-        .update({ status: 'rejected' })
-        .eq('id', commentId)
+      const { error } = await retry(async () => {
+        const result = await supabase
+          .from('comments')
+          .update({ status: 'rejected' })
+          .eq('id', commentId)
+        return result
+      })
 
       if (error) throw error
+      announceToScreenReader('Comment rejected')
     } catch (err) {
-      setError(err instanceof Error ? err : new Error('Failed to reject comment'))
+      const error = err instanceof Error ? err : new Error('Failed to reject comment')
+      setError(error)
+      announceToScreenReader(getErrorMessage(error), 'assertive')
     }
   }
 
@@ -123,17 +182,35 @@ export const TalkToMe = ({ postId, className = '' }: TalkToMeProps) => {
     (comment) => comment.status === 'approved' || (isAdmin && comment.status === 'pending')
   )
 
+  const { comments: paginatedComments, hasMore: hasMoreComments, nextPage } = paginateComments(
+    filteredComments,
+    currentPage
+  )
+
+  const loadMore = () => {
+    setCurrentPage(nextPage)
+    setHasMore(hasMoreComments)
+  }
+
   return (
-    <div className={`t-t-m-container ${className}`}>
+    <div
+      className={`t-t-m-container ${className}`}
+      role="region"
+      aria-label={getAriaLabel('Comments section')}
+      aria-describedby={getAriaDescribedBy('comments')}
+    >
+      <div id="t-t-m-live-region" aria-live="polite" className="t-t-m-sr-only" />
       {isLoading ? (
-        <div className="t-t-m-loading">Loading comments...</div>
+        <div className="t-t-m-loading" role="status">Loading comments...</div>
       ) : (
         <>
           <CommentList
-            comments={filteredComments}
+            comments={paginatedComments}
             isAdmin={isAdmin}
             onApprove={handleApprove}
             onReject={handleReject}
+            hasMore={hasMore}
+            onLoadMore={loadMore}
           />
           {user && (
             <CommentInput
@@ -143,7 +220,7 @@ export const TalkToMe = ({ postId, className = '' }: TalkToMeProps) => {
             />
           )}
           {!user && (
-            <div className="t-t-m-login-prompt">
+            <div className="t-t-m-login-prompt" role="alert">
               Please sign in to leave a comment
             </div>
           )}
