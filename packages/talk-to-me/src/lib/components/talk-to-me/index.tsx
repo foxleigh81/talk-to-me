@@ -1,15 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
-import { useTalkToMe } from '@lib/hooks/use-talk-to-me'
+import { useTalkToMe } from '../../hooks/use-talk-to-me'
 import { CommentInput } from './comment-input'
 import { CommentList } from './comment-list'
-import { Comment, TalkToMeProps } from '@lib/types/component'
+import { Comment, TalkToMeProps } from '../../types/component'
 import { RealtimePostgresChangesPayload } from '@supabase/supabase-js'
-import { sanitizeComment, validateComment, isRateLimited } from '@lib/utils/security'
-import { paginateComments, cacheComments, getCachedComments } from '@lib/utils/performance'
-import { retry, getErrorMessage, TalkToMeError } from '@lib/utils/error'
-import { getAriaLabel, getAriaDescribedBy, announceToScreenReader } from '@lib/utils/accessibility'
-import { LoginForm } from '@lib/components/login-form'
-import './style.css'
+import { sanitizeComment, validateComment, isRateLimited } from '../../utils/security'
+import { paginateComments, cacheComments, getCachedComments } from '../../utils/performance'
+import { retry, getErrorMessage, TalkToMeError } from '../../utils/error'
+import { getAriaLabel, getAriaDescribedBy, announceToScreenReader } from '../../utils/accessibility'
+import { LoginForm } from '../login-form'
 
 export const TalkToMe = ({ postId, className = '' }: TalkToMeProps) => {
   const { user, isAdmin, supabase } = useTalkToMe()

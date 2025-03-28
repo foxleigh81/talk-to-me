@@ -1,4 +1,5 @@
 /// <reference path="./declarations.d.ts" />
+import 'talk-to-me/theme.css';
 import { Routes, Route } from 'react-router-dom';
 // TODO: Fix type declarations so we don't need to use ts-ignore
 // @ts-ignore - Type definitions exist but TS isn't finding them correctly

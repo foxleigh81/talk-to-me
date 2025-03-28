@@ -31,6 +31,10 @@ export default defineConfig({
           'react-dom': 'ReactDOM',
         },
         preserveModules: false,
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name === 'style.css') return 'talk-to-me.css';
+          return assetInfo.name;
+        },
       },
     },
   },

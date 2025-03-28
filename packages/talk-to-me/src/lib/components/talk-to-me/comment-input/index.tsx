@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
-import { CommentInputProps } from '@lib/types/component'
-import { getAriaLabel, getAriaDescribedBy, focusElement } from '@lib/utils/accessibility'
-import './style.css'
+import { CommentInputProps } from '../../../types/component'
+import { getAriaLabel, getAriaDescribedBy, focusElement } from '../../../utils/accessibility'
+// CSS is now handled by a global stylesheet imported in the main index.ts file
 
 export const CommentInput = ({ onSubmit, isSubmitting, error }: CommentInputProps) => {
   const [content, setContent] = useState('')

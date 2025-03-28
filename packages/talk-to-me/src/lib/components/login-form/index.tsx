@@ -1,7 +1,6 @@
-import { useState } from 'react'
-import { useTalkToMe } from '@lib/hooks/use-talk-to-me'
+import React, { useState } from 'react'
+import { useTalkToMe } from '../../hooks/use-talk-to-me'
 import { Provider } from '@supabase/supabase-js'
-import './style.css'
 
 export const LoginForm = () => {
   const { login, loginWithEmail, error, isLoading } = useTalkToMe()

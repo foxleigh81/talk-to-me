@@ -3,6 +3,7 @@ import { createClient, SupabaseClient, User, Provider } from '@supabase/supabase
 import { TalkToMeContext } from '@lib/context/talk-to-me-context'
 import { TalkToMeProviderProps } from '@lib/types/context'
 import { AuthService } from '@lib/auth'
+import '../../styles/global.css'
 
 export const TalkToMeProvider = ({
   supabaseUrl,

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
-import { CommentListProps } from '@lib/types/component'
-import { getAriaLabel } from '@lib/utils/accessibility'
-import './style.css'
+import { CommentListProps } from '../../../types/component'
+import { getAriaLabel } from '../../../utils/accessibility'
+// CSS is now handled by a global stylesheet imported in the main index.ts file
 
 export const CommentList = ({
   comments,
