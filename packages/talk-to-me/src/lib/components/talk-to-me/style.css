@@ -85,3 +85,37 @@
     --t-t-m-text-info: CanvasText;
   }
 }
+
+.t-t-m-error {
+  background-color: #fee2e2;
+  border: 1px solid #ef4444;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 16px;
+  color: #b91c1c;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.t-t-m-retry-button {
+  background-color: #b91c1c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  margin-left: 10px;
+  font-weight: 500;
+}
+
+.t-t-m-retry-button:hover {
+  background-color: #991b1b;
+}
+
+.t-t-m-retry-button:focus {
+  outline: 2px solid #ef4444;
+  outline-offset: 2px;
+}
