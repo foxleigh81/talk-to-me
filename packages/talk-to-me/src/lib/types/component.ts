@@ -21,6 +21,8 @@ export interface CommentListProps {
   isAdmin: boolean
   onApprove: (commentId: string) => Promise<void>
   onReject: (commentId: string) => Promise<void>
+  hasMore: boolean
+  onLoadMore: () => void
 }
 
 export interface CommentInputProps {
