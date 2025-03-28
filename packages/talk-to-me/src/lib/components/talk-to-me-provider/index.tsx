@@ -29,9 +29,18 @@ export const TalkToMeProvider = ({
         if (user) {
           authService.checkAdminStatus(user).then(setIsAdmin)
           // Sync user to custom users table
-          supabase.functions.invoke('sync-user').catch((err) => {
-            console.error('Failed to sync user:', err)
-          })
+          console.log('Attempting to sync user on initial load')
+          supabase.functions.invoke('sync-user')
+            .then(response => {
+              if (response.error) {
+                console.error('Error from sync-user function:', response.error)
+              } else {
+                console.log('User sync successful:', response)
+              }
+            })
+            .catch((err) => {
+              console.error('Failed to invoke sync-user function:', err)
+            })
         }
       }
       setIsLoading(false)
@@ -41,6 +50,7 @@ export const TalkToMeProvider = ({
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      console.log('Auth state changed:', _event)
       const currentUser = session?.user ?? null
       setUser(currentUser)
       if (currentUser) {
@@ -48,9 +58,18 @@ export const TalkToMeProvider = ({
         setIsAdmin(adminStatus)
         // Sync user to custom users table on sign in
         if (_event === 'SIGNED_IN') {
-          supabase.functions.invoke('sync-user').catch((err) => {
-            console.error('Failed to sync user:', err)
-          })
+          console.log('Attempting to sync user after SIGNED_IN event')
+          supabase.functions.invoke('sync-user')
+            .then(response => {
+              if (response.error) {
+                console.error('Error from sync-user function:', response.error)
+              } else {
+                console.log('User sync successful on sign in:', response)
+              }
+            })
+            .catch((err) => {
+              console.error('Failed to invoke sync-user function on sign in:', err)
+            })
         }
       } else {
         setIsAdmin(false)

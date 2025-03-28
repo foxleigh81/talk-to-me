@@ -1,4 +1,14 @@
-export { TalkToMeProvider } from './lib/components/talk-to-me-provider'
-export { useTalkToMe } from './lib/hooks/use-talk-to-me'
-export { TalkToMe } from './lib/components/talk-to-me'
-export type { TalkToMeConfig, TalkToMeContextType, TalkToMeProviderProps } from './lib/types/context'
+// Export components
+export * from './lib/components';
+
+// Export types
+export type {
+  TalkToMeConfig,
+  TalkToMeContextType,
+  TalkToMeProviderProps
+} from './lib/types/context';
+
+export type {
+  Comment,
+  TalkToMeProps
+} from './lib/types/component';
