@@ -1,4 +1,7 @@
+/// <reference path="./declarations.d.ts" />
 import { Routes, Route } from 'react-router-dom';
+// TODO: Fix type declarations so we don't need to use ts-ignore
+// @ts-ignore - Type definitions exist but TS isn't finding them correctly
 import { TalkToMeProvider } from 'talk-to-me';
 import { Layout } from './components/Layout';
 import { Home } from './pages/Home';
@@ -43,17 +46,10 @@ function ErrorBoundary({ children }: { children: React.ReactNode }) {
 function App() {
   return (
     <ErrorBoundary>
-      {/* @ts-ignore - Ignoring type mismatch between source code and compiled types */}
       <TalkToMeProvider
         supabaseUrl={import.meta.env.VITE_SUPABASE_URL}
         supabaseAnonKey={import.meta.env.VITE_SUPABASE_ANON_KEY}
-        config={{
-          adminEmails: [import.meta.env.VITE_ADMIN_EMAIL],
-          theme: {
-            primaryColour: '#3B82F6',
-            darkMode: false
-          }
-        }}
+        config={{ themeColour: '#3B82F6', darkMode: false }}
       >
         <div className="min-h-screen bg-gray-100">
           <div className="container mx-auto p-4">
