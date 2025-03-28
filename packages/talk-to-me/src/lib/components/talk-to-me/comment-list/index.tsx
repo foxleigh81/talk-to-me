@@ -1,55 +1,81 @@
+import { useEffect, useRef } from 'react'
 import { CommentListProps } from '@lib/types/component'
-import DOMPurify from 'dompurify'
+import { getAriaLabel } from '@lib/utils/accessibility'
 import './style.css'
 
-export const CommentList = ({ comments, isAdmin, onApprove, onReject }: CommentListProps) => {
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-GB', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    })
-  }
+export const CommentList = ({
+  comments,
+  isAdmin,
+  onApprove,
+  onReject,
+  hasMore,
+  onLoadMore
+}: CommentListProps) => {
+  const observerRef = useRef<IntersectionObserver | null>(null)
+  const loadMoreRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!hasMore) return
+
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          onLoadMore()
+        }
+      },
+      { threshold: 0.5 }
+    )
+
+    if (loadMoreRef.current) {
+      observerRef.current.observe(loadMoreRef.current)
+    }
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect()
+      }
+    }
+  }, [hasMore, onLoadMore])
 
   return (
-    <div className="t-t-m-comment-list">
+    <div
+      className="t-t-m-comment-list"
+      role="list"
+      aria-label={getAriaLabel('Comments')}
+    >
       {comments.map((comment) => (
         <div
           key={comment.id}
-          className={`t-t-m-comment ${comment.status === 'pending' ? 't-t-m-comment-pending' : ''}`}
+          className={`t-t-m-comment ${comment.status === 'pending' ? 't-t-m-pending' : ''}`}
+          role="listitem"
         >
-          <div className="t-t-m-comment-header">
-            <div className="t-t-m-comment-author">
-              {comment.author?.user_metadata?.avatar_url && (
-                <img
-                  src={comment.author.user_metadata.avatar_url}
-                  alt={`${comment.author.email}'s avatar`}
-                  className="t-t-m-avatar"
-                />
-              )}
-              <span className="t-t-m-author-email">{comment.author?.email}</span>
+          <div className="t-t-m-comment-content">
+            <div className="t-t-m-comment-header">
+              <span className="t-t-m-comment-author">
+                {comment.author?.email || 'Anonymous'}
+              </span>
+              <span className="t-t-m-comment-date">
+                {new Date(comment.created_at).toLocaleDateString()}
+              </span>
             </div>
-            <span className="t-t-m-comment-date">{formatDate(comment.created_at)}</span>
+            <div
+              className="t-t-m-comment-text"
+              dangerouslySetInnerHTML={{ __html: comment.content }}
+            />
           </div>
-          <div
-            className="t-t-m-comment-content"
-            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(comment.content) }}
-          />
           {isAdmin && comment.status === 'pending' && (
-            <div className="t-t-m-moderation-actions">
+            <div className="t-t-m-comment-actions">
               <button
                 onClick={() => onApprove(comment.id)}
-                className="t-t-m-approve-button"
-                aria-label="Approve comment"
+                className="t-t-m-button t-t-m-button-approve"
+                aria-label={getAriaLabel('Approve comment')}
               >
                 Approve
               </button>
               <button
                 onClick={() => onReject(comment.id)}
-                className="t-t-m-reject-button"
-                aria-label="Reject comment"
+                className="t-t-m-button t-t-m-button-reject"
+                aria-label={getAriaLabel('Reject comment')}
               >
                 Reject
               </button>
@@ -57,6 +83,16 @@ export const CommentList = ({ comments, isAdmin, onApprove, onReject }: CommentL
           )}
         </div>
       ))}
+      {hasMore && (
+        <div
+          ref={loadMoreRef}
+          className="t-t-m-load-more"
+          role="status"
+          aria-label="Loading more comments"
+        >
+          Loading more comments...
+        </div>
+      )}
     </div>
   )
 }
