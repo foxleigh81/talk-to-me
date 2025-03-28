@@ -21,7 +21,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     id: '3',
-    title: 'The Geek&apos;s Guide to Socializing at Parties',
+    title: 'The Geek\'s Guide to Socializing at Parties',
     slug: 'geek-guide-to-socializing',
     excerpt: 'Tips and tricks for introverts to survive social events without mentioning Star Trek (too much).',
     content: `So, you've been dragged to another social event and you're wondering if mentioning your impressive Lego Star Destroyer is a good conversation starter. Spoiler alert: it is! But pacing is key—try to avoid lengthy debates about who shot first (we all know it was Han). Offer to fix someone's Wi-Fi if things get awkward, and always remember, when in doubt, nod and say, "Yes, I've heard that's a great show," even if you've never left your anime comfort zone.`,
