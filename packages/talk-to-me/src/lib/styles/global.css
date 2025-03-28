@@ -429,3 +429,25 @@
     transition: none;
   }
 }
+
+.t-t-m-comments-header {
+  font-size: 0.9rem;
+  color: var(--t-t-m-text-secondary);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--t-t-m-border);
+}
+
+.t-t-m-branding {
+  font-size: 0.8rem;
+  color: var(--t-t-m-text-secondary);
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--t-t-m-border);
+}
+
+.t-t-m-brand {
+  font-weight: 600;
+  color: var(--t-t-m-primary);
+}

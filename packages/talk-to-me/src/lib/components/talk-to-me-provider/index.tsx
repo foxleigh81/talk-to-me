@@ -11,74 +11,75 @@ export const TalkToMeProvider = ({
   config,
   children,
 }: TalkToMeProviderProps) => {
-  const [supabase] = useState<SupabaseClient>(() =>
-    createClient(supabaseUrl, supabaseAnonKey)
-  )
+  const [supabase] = useState<SupabaseClient>(() => {
+    if (!supabaseUrl || !supabaseAnonKey) {
+      throw new Error('Supabase URL and anon key are required')
+    }
+    return createClient(supabaseUrl, supabaseAnonKey)
+  })
+
   const [authService] = useState(() => new AuthService(supabase))
   const [user, setUser] = useState<User | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  // Initialize isLoading to false to avoid loading state issues
+  const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
   const [isAdmin, setIsAdmin] = useState(false)
 
+  // Effect to check the initial user
   useEffect(() => {
-    // Check active sessions and sets the user
-    authService.getCurrentUser().then(({ user, error }) => {
-      if (error) {
-        setError(error)
-      } else {
-        setUser(user)
-        if (user) {
-          authService.checkAdminStatus(user).then(setIsAdmin)
-          // Sync user to custom users table
-          console.log('Attempting to sync user on initial load')
-          supabase.functions.invoke('sync-user')
-            .then(response => {
-              if (response.error) {
-                console.error('Error from sync-user function:', response.error)
-              } else {
-                console.log('User sync successful:', response)
-              }
-            })
-            .catch((err) => {
-              console.error('Failed to invoke sync-user function:', err)
-            })
+    const checkInitialUser = async () => {
+      try {
+        const { data, error } = await supabase.auth.getUser()
+        if (error) {
+          setError(error)
+          setUser(null)
+          return
         }
-      }
-      setIsLoading(false)
-    })
 
-    // Listen for changes on auth state
+        if (data.user) {
+          setUser(data.user)
+          const adminStatus = await authService.checkAdminStatus(data.user)
+          setIsAdmin(adminStatus)
+        }
+      } catch (err) {
+        console.error('Error checking initial user:', err)
+      }
+    }
+
+    checkInitialUser()
+  }, [supabase.auth, authService])
+
+  // Listen for changes on auth state
+  useEffect(() => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      console.log('Auth state changed:', _event)
       const currentUser = session?.user ?? null
       setUser(currentUser)
+
       if (currentUser) {
         const adminStatus = await authService.checkAdminStatus(currentUser)
         setIsAdmin(adminStatus)
+
         // Sync user to custom users table on sign in
         if (_event === 'SIGNED_IN') {
-          console.log('Attempting to sync user after SIGNED_IN event')
-          supabase.functions.invoke('sync-user')
-            .then(response => {
-              if (response.error) {
-                console.error('Error from sync-user function:', response.error)
-              } else {
-                console.log('User sync successful on sign in:', response)
-              }
-            })
-            .catch((err) => {
-              console.error('Failed to invoke sync-user function on sign in:', err)
-            })
+          try {
+            const response = await supabase.functions.invoke('sync-user')
+            if (response.error) {
+              console.error('Error from sync-user function:', response.error)
+            }
+          } catch (err) {
+            console.error('Failed to invoke sync-user function on sign in:', err)
+          }
         }
       } else {
         setIsAdmin(false)
       }
-      setIsLoading(false)
     })
 
-    return () => subscription.unsubscribe()
+    return () => {
+      subscription.unsubscribe()
+    }
   }, [supabase.auth, authService])
 
   const login = async (provider: Provider) => {

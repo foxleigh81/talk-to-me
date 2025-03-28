@@ -4,6 +4,7 @@ export interface TalkToMeConfig {
   themeColour: string
   darkMode: boolean
   moderationBadgePosition?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left'
+  hideTTMBranding?: boolean
 }
 
 export interface TalkToMeContextType {
