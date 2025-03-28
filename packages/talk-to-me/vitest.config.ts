@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
@@ -16,10 +17,12 @@ export default defineConfig({
         'node_modules/',
         'src/test/setup.ts',
       ],
-      branches: 80,
-      functions: 80,
-      lines: 80,
-      statements: 80
+      thresholds: {
+        statements: 80,
+        branches: 80,
+        functions: 80,
+        lines: 80
+      }
     },
     watch: false,
     passWithNoTests: false,
@@ -29,7 +32,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
-      '@test': resolve(__dirname, './src/test')
+      '@test': resolve(__dirname, './src/test'),
+      '@lib': resolve(__dirname, './src/lib'),
     },
   },
 });

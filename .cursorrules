@@ -6,6 +6,8 @@
 - Always prefix CSS classes with `t-t-m-` to avoid style conflicts.
 - Do not add external styling libraries like TailwindCSS or CSS Modules; stick to regular CSS.
 - Ensure all comments and documentation follow British English spelling and conventions.
+- All functional code must have accompanying robust tests, we are using Vitest and React testing library
+- Components should be contained in a folder which has the components name and the code should be in an index.tsx file, any stylesheets for that component should be called style.css and be inside the folder with the component and any tests for the component should also be contained inside that components folder.
 
 ## Security Rules
 
