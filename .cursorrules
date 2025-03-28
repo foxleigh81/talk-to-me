@@ -1,0 +1,46 @@
+# Cursor Rules for Talk To Me Project
+
+## General Guidelines
+
+- Use PNPM as our package manager and task runner
+- Always prefix CSS classes with `t-t-m-` to avoid style conflicts.
+- Do not add external styling libraries like TailwindCSS or CSS Modules; stick to regular CSS.
+- Ensure all comments and documentation follow British English spelling and conventions.
+
+## Security Rules
+
+- Always sanitise user input explicitly using DOMPurify.
+- Validate admin privileges using Supabase user IDs instead of emails alone.
+
+## Code Structure
+
+- Keep components modular and single-purpose.
+- All Supabase interactions should be encapsulated within dedicated reusable functions or hooks.
+- Always wrap external plugin hooks (`onBeforePost`, `onApprove`, etc.) in `try-catch` blocks.
+
+## UX and Accessibility
+
+- Implement ARIA attributes and keyboard navigation for interactive components.
+- Use optimistic UI updates for submitting comments and provide immediate feedback on errors.
+- Clearly document any limitations (e.g., Supabase realtime limits) within component comments.
+
+## Performance Considerations
+
+- Implement local caching for comments to improve load performance.
+- Limit threaded comment depth to 5 levels by default to maintain UI readability and performance.
+- Always paginate or implement infinite scroll for comment threads exceeding 50 comments.
+
+## Theming and Customisation
+
+- Use CSS variables for theming to facilitate easy customisation.
+- Support Google Fonts through configuration but default to 'Sora'.
+
+## Plugin System
+
+- Ensure all plugins are optional and failures in plugins do not disrupt the main functionality.
+- Document plugin integration examples clearly within component files or README.
+
+## Documentation
+
+- Maintain detailed inline documentation and JSDoc comments for all exposed components, hooks, and utilities.
+- Keep the README updated with clear usage instructions and explanations of available features and configurations.
