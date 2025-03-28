@@ -1,7 +1,8 @@
 import React, { PropsWithChildren } from 'react';
 import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { TalkToMeProvider } from '../components/TalkToMeProvider';
+import userEvent, { UserEvent } from '@testing-library/user-event';
+import { TalkToMeProvider } from '@lib/components/talk-to-me-provider';
+import { TalkToMeConfig } from '@lib/types/context';
 
 // Mock Supabase configuration
 const mockSupabaseConfig = {
@@ -10,19 +11,17 @@ const mockSupabaseConfig = {
 };
 
 // Mock provider configuration
-const mockConfig = {
+const mockConfig: TalkToMeConfig = {
   adminEmails: ['admin@example.com'],
-  theme: {
-    primaryColor: '#007bff',
-    darkMode: false
-  },
-  allowedProviders: ['google', 'github']
+  socialProviders: ['google', 'github'],
+  themeColour: '#007bff',
+  darkMode: false
 };
 
 type CustomRenderOptions = {
   providerProps?: {
     supabaseConfig?: typeof mockSupabaseConfig;
-    config?: typeof mockConfig;
+    config?: TalkToMeConfig;
   };
 };
 
@@ -33,7 +32,7 @@ type CustomRenderOptions = {
 function customRender(
   ui: React.ReactElement,
   options: CustomRenderOptions = {}
-) {
+): ReturnType<typeof render> & { user: UserEvent } {
   const {
     providerProps = {
       supabaseConfig: mockSupabaseConfig,
@@ -45,17 +44,19 @@ function customRender(
   function Wrapper({ children }: PropsWithChildren) {
     return (
       <TalkToMeProvider
-        supabaseConfig={providerProps.supabaseConfig}
-        config={providerProps.config}
+        supabaseUrl={providerProps.supabaseConfig?.supabaseUrl || ''}
+        supabaseAnonKey={providerProps.supabaseConfig?.supabaseKey || ''}
+        config={providerProps.config || mockConfig}
       >
         {children}
       </TalkToMeProvider>
     );
   }
 
+  const renderResult = render(ui, { wrapper: Wrapper, ...renderOptions });
   return {
-    user: userEvent.setup(),
-    ...render(ui, { wrapper: Wrapper, ...renderOptions })
+    ...renderResult,
+    user: userEvent.setup()
   };
 }
 
