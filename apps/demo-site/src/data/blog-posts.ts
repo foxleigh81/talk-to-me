@@ -3,28 +3,29 @@ import { BlogPost } from '../types/blog';
 export const blogPosts: BlogPost[] = [
   {
     id: '1',
-    title: 'Getting Started with React and TypeScript',
-    slug: 'getting-started-with-react-and-typescript',
-    excerpt: 'Learn the basics of building modern web applications with React and TypeScript.',
-    content: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.`,
+    title: 'How to Survive Your First D&D Campaign Without Becoming a Meme',
+    slug: 'survive-first-dnd-campaign',
+    excerpt: 'A friendly guide for new adventurers to avoid embarrassment at the gaming table.',
+    content: `So you've decided to become a legendary adventurer and roll your first d20. Congratulations! But before you accidentally cast Fireball in the tavern, let's talk survival tips. First, never insult the Dungeon Master's storytelling abilities—remember, they control the dragons. Second, naming your rogue "Shadow Darkblade" might earn a few eye-rolls. Keep snacks handy, don't touch another player's dice without permission, and for the love of Pelor, avoid splitting the party.`,
     date: '2024-03-28',
-    author: 'John Doe'
+    author: 'Gandalf the Grey'
   },
   {
     id: '2',
-    title: 'The Future of Web Development',
-    slug: 'future-of-web-development',
-    excerpt: 'Exploring upcoming trends and technologies in web development.',
-    content: `Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
-
-Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
-
-At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.`,
+    title: '10 Signs You Might Be Secretly a JavaScript Developer',
+    slug: 'signs-you-are-js-developer',
+    excerpt: 'Wondering if JavaScript has silently taken over your life? Check these warning signs.',
+    content: `Have you started dreaming in closures and promises? Does your fridge now run Node.js? If you've ever debugged your morning coffee routine or asked your friends if they're 'truthy or falsy' about weekend plans, you might secretly be a JavaScript developer. But don't worry, recognizing the signs is the first step towards acceptance—or maybe just another cup of coffee and another npm package.`,
     date: '2024-03-27',
-    author: 'Jane Smith'
+    author: 'Ada Scriptlace'
+  },
+  {
+    id: '3',
+    title: 'The Geek&apos;s Guide to Socializing at Parties',
+    slug: 'geek-guide-to-socializing',
+    excerpt: 'Tips and tricks for introverts to survive social events without mentioning Star Trek (too much).',
+    content: `So, you've been dragged to another social event and you're wondering if mentioning your impressive Lego Star Destroyer is a good conversation starter. Spoiler alert: it is! But pacing is key—try to avoid lengthy debates about who shot first (we all know it was Han). Offer to fix someone's Wi-Fi if things get awkward, and always remember, when in doubt, nod and say, "Yes, I've heard that's a great show," even if you've never left your anime comfort zone.`,
+    date: '2024-03-26',
+    author: 'Clark Nerdington'
   }
 ];
