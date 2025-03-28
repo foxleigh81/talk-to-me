@@ -1,5 +1,5 @@
 import { BlogPost as BlogPostType } from '../types/blog';
-import { TalkToMe } from '../mock-talk-to-me';
+import { TalkToMe } from 'talk-to-me';
 
 interface BlogPostProps {
   post: BlogPostType;
