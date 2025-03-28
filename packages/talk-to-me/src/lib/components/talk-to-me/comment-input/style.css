@@ -1,48 +1,92 @@
-.t-t-m-comment-input-form {
-  margin: 1rem 0;
+.t-t-m-comment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
-.t-t-m-comment-input {
+.t-t-m-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.t-t-m-textarea {
   width: 100%;
   min-height: 100px;
   padding: 0.75rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.375rem;
-  font-family: inherit;
+  border: 1px solid var(--t-t-m-border-color, #e9ecef);
+  border-radius: 0.5rem;
+  background-color: var(--t-t-m-bg-primary, #ffffff);
+  color: var(--t-t-m-text-primary, #212529);
   font-size: 1rem;
   line-height: 1.5;
   resize: vertical;
-  margin-bottom: 0.5rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.t-t-m-comment-input:focus {
+.t-t-m-textarea:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  border-color: var(--t-t-m-primary-color, #0d6efd);
+  box-shadow: 0 0 0 3px var(--t-t-m-primary-focus, rgba(13, 110, 253, 0.25));
 }
 
-.t-t-m-submit-button {
-  background-color: #3b82f6;
-  color: white;
+.t-t-m-textarea:disabled {
+  background-color: var(--t-t-m-bg-disabled, #e9ecef);
+  cursor: not-allowed;
+}
+
+.t-t-m-textarea.t-t-m-error {
+  border-color: var(--t-t-m-danger-color, #dc3545);
+}
+
+.t-t-m-textarea.t-t-m-error:focus {
+  box-shadow: 0 0 0 3px var(--t-t-m-danger-focus, rgba(220, 53, 69, 0.25));
+}
+
+.t-t-m-textarea-description {
+  font-size: 0.875rem;
+  color: var(--t-t-m-text-secondary, #6c757d);
+  margin-top: 0.25rem;
+}
+
+.t-t-m-error-message {
+  color: var(--t-t-m-danger-color, #dc3545);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.t-t-m-button {
+  align-self: flex-end;
   padding: 0.5rem 1rem;
   border: none;
-  border-radius: 0.375rem;
+  border-radius: 0.5rem;
+  background-color: var(--t-t-m-primary-color, #0d6efd);
+  color: white;
+  font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
-.t-t-m-submit-button:hover:not(:disabled) {
-  background-color: #2563eb;
+.t-t-m-button:hover:not(:disabled) {
+  background-color: var(--t-t-m-primary-hover, #0b5ed7);
 }
 
-.t-t-m-submit-button:disabled {
-  background-color: #94a3b8;
+.t-t-m-button:disabled {
+  background-color: var(--t-t-m-bg-disabled, #e9ecef);
+  color: var(--t-t-m-text-disabled, #adb5bd);
   cursor: not-allowed;
 }
 
-.t-t-m-error {
-  color: #dc2626;
-  font-size: 0.875rem;
-  margin-bottom: 0.5rem;
+.t-t-m-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--t-t-m-primary-focus, rgba(13, 110, 253, 0.25));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-t-m-textarea,
+  .t-t-m-button {
+    transition: none;
+  }
 }
