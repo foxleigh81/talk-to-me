@@ -1,0 +1,14 @@
+{
+    "name": "talk-to-me",
+    "private": true,
+    "version": "0.1.0",
+    "scripts": {
+        "dev": "pnpm --filter @talk-to-me/demo dev",
+        "build": "pnpm -r build",
+        "lint": "pnpm -r lint",
+        "test": "pnpm -r test"
+    },
+    "devDependencies": {
+        "typescript": "^5.2.2"
+    }
+}
