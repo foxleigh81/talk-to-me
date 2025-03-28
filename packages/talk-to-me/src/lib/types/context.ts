@@ -1,4 +1,4 @@
-import { User } from '@supabase/supabase-js'
+import { User, SupabaseClient } from '@supabase/supabase-js'
 
 export type SocialProvider = 'facebook' | 'google' | 'linkedin' | 'github'
 
@@ -14,6 +14,7 @@ export interface TalkToMeContextType {
   user: User | null
   isAdmin: boolean
   config: TalkToMeConfig
+  supabase: SupabaseClient
   login: (provider: SocialProvider) => Promise<void>
   loginWithEmail: (email: string) => Promise<void>
   logout: () => Promise<void>

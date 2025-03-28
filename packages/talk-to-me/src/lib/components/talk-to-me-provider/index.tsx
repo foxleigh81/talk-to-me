@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { createClient, SupabaseClient, User } from '@supabase/supabase-js'
-import { TalkToMeContext } from '../../context/talk-to-me-context'
-import { TalkToMeProviderProps, TalkToMeConfig } from '../../types/context'
-import { AuthService } from '../../auth'
+import { TalkToMeContext } from '@lib/context/talk-to-me-context'
+import { TalkToMeProviderProps } from '@lib/types/context'
+import { AuthService } from '@lib/auth'
 
 export const TalkToMeProvider = ({
   supabaseUrl,
@@ -104,6 +104,7 @@ export const TalkToMeProvider = ({
     user,
     isAdmin,
     config,
+    supabase,
     login,
     loginWithEmail,
     logout,
