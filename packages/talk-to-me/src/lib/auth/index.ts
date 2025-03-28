@@ -83,17 +83,22 @@ export class AuthService {
   async checkAdminStatus(user: User): Promise<boolean> {
     if (!user.email) return false
 
-    const { data, error } = await this.supabase
-      .from('users')
-      .select('is_admin')
-      .eq('email', user.email.toLowerCase())
-      .single()
+    try {
+      const { data, error } = await this.supabase
+        .from('users')
+        .select('is_admin')
+        .eq('email', user.email.toLowerCase())
+        .single()
 
-    if (error) {
-      console.error('Error checking admin status:', error)
+      if (error) {
+        console.error('Error checking admin status:', error)
+        return false
+      }
+
+      return data?.is_admin ?? false
+    } catch (err) {
+      console.error('Error checking admin status:', err)
       return false
     }
-
-    return data?.is_admin ?? false
   }
 }

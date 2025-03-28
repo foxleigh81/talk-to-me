@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { AuthService } from './index'
-import { createClient } from '@supabase/supabase-js'
-import { SocialProvider } from '../types/context'
+import { createClient, Provider } from '@supabase/supabase-js'
 import md5 from 'md5'
 
 vi.mock('@supabase/supabase-js', () => ({
@@ -20,6 +19,13 @@ describe('AuthService', () => {
         signOut: vi.fn(),
         getUser: vi.fn(),
       },
+      from: vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            single: vi.fn()
+          })
+        })
+      })
     }
     vi.mocked(createClient).mockReturnValue(mockSupabase as any)
     authService = new AuthService(mockSupabase)
@@ -56,7 +62,7 @@ describe('AuthService', () => {
 
   describe('signInWithSocial', () => {
     it('should successfully initiate social sign in', async () => {
-      const provider = 'google' as SocialProvider
+      const provider = 'google' as Provider
       mockSupabase.auth.signInWithOAuth.mockResolvedValue({ error: null })
 
       const result = await authService.signInWithSocial(provider)
@@ -72,7 +78,7 @@ describe('AuthService', () => {
     })
 
     it('should handle errors when signing in with social provider', async () => {
-      const provider = 'google' as SocialProvider
+      const provider = 'google' as Provider
       const error = new Error('Failed to sign in')
       mockSupabase.auth.signInWithOAuth.mockResolvedValue({ error })
 
@@ -145,29 +151,38 @@ describe('AuthService', () => {
   describe('checkAdminStatus', () => {
     it('should return true for admin email', async () => {
       const user = { email: 'admin@example.com' }
-      const adminEmails = ['admin@example.com']
+      mockSupabase.from().select().eq().single.mockResolvedValue({
+        data: { is_admin: true },
+        error: null
+      })
 
-      const result = await authService.checkAdminStatus(user as any, adminEmails)
+      const result = await authService.checkAdminStatus(user as any)
 
       expect(result).toBe(true)
+      expect(mockSupabase.from).toHaveBeenCalledWith('users')
+      expect(mockSupabase.from().select).toHaveBeenCalledWith('is_admin')
+      expect(mockSupabase.from().select().eq).toHaveBeenCalledWith('email', 'admin@example.com')
     })
 
     it('should return false for non-admin email', async () => {
       const user = { email: 'user@example.com' }
-      const adminEmails = ['admin@example.com']
+      mockSupabase.from().select().eq().single.mockResolvedValue({
+        data: { is_admin: false },
+        error: null
+      })
 
-      const result = await authService.checkAdminStatus(user as any, adminEmails)
+      const result = await authService.checkAdminStatus(user as any)
 
       expect(result).toBe(false)
     })
 
     it('should return false for user without email', async () => {
       const user = { email: null }
-      const adminEmails = ['admin@example.com']
 
-      const result = await authService.checkAdminStatus(user as any, adminEmails)
+      const result = await authService.checkAdminStatus(user as any)
 
       expect(result).toBe(false)
+      expect(mockSupabase.from).not.toHaveBeenCalled()
     })
   })
 })

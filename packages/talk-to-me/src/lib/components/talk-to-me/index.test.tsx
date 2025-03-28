@@ -5,6 +5,11 @@ import { useTalkToMe } from '@lib/hooks/use-talk-to-me'
 import { SupabaseClient } from '@supabase/supabase-js'
 import { TalkToMeConfig } from '@lib/types/context'
 
+// Mock the LoginForm component
+vi.mock('@lib/components/login-form', () => ({
+  LoginForm: () => <div>Sign in to comment</div>,
+}))
+
 // Mock the useTalkToMe hook
 vi.mock('@lib/hooks/use-talk-to-me')
 
@@ -141,7 +146,7 @@ describe('TalkToMe', () => {
     await waitFor(() => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument()
     })
-    expect(screen.getByText(/please sign in/i)).toBeInTheDocument()
+    expect(screen.getByText('Sign in to comment')).toBeInTheDocument()
   })
 
   it('allows admin to approve comments', async () => {

@@ -23,6 +23,9 @@ type CustomRenderOptions = {
   };
 };
 
+// Define the return type more explicitly
+type CustomRenderResult = RenderResult & { user: UserEvent };
+
 /**
  * Custom render function that wraps component with TalkToMeProvider
  * Useful for testing components that rely on our context
@@ -30,7 +33,7 @@ type CustomRenderOptions = {
 function customRender(
   ui: React.ReactElement,
   options: CustomRenderOptions = {}
-): RenderResult & { user: UserEvent } {
+): CustomRenderResult {
   const {
     providerProps = {
       supabaseConfig: mockSupabaseConfig,
@@ -51,9 +54,11 @@ function customRender(
     );
   }
 
+  const renderResult = render(ui, { wrapper: Wrapper, ...renderOptions }) as RenderResult;
+
   return {
-    user: userEvent.setup(),
-    ...render(ui, { wrapper: Wrapper, ...renderOptions })
+    ...renderResult,
+    user: userEvent.setup()
   };
 }
 

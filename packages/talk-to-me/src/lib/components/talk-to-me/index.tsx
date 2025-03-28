@@ -8,6 +8,7 @@ import { sanitizeComment, validateComment, isRateLimited } from '@lib/utils/secu
 import { paginateComments, cacheComments, getCachedComments } from '@lib/utils/performance'
 import { retry, getErrorMessage, TalkToMeError } from '@lib/utils/error'
 import { getAriaLabel, getAriaDescribedBy, announceToScreenReader } from '@lib/utils/accessibility'
+import { LoginForm } from '@lib/components/login-form'
 import './style.css'
 
 export const TalkToMe = ({ postId, className = '' }: TalkToMeProps) => {
@@ -212,17 +213,14 @@ export const TalkToMe = ({ postId, className = '' }: TalkToMeProps) => {
             hasMore={hasMore}
             onLoadMore={loadMore}
           />
-          {user && (
+          {user ? (
             <CommentInput
               onSubmit={handleSubmit}
               isSubmitting={isSubmitting}
               error={error}
             />
-          )}
-          {!user && (
-            <div className="t-t-m-login-prompt" role="alert">
-              Please sign in to leave a comment
-            </div>
+          ) : (
+            <LoginForm />
           )}
         </>
       )}
