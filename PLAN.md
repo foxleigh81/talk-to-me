@@ -39,7 +39,7 @@ Create a `TalkToMeProvider` component that wraps children in React context. It s
 **Prompt:**
 Implement authentication using Supabase:
 
-- Allow sign-in with email magic link and Social Sign in. Use Facebook, Google, LinkedIn and GitHub has the provider options. 
+- Allow sign-in with email magic link and Social Sign in. Use Facebook, Google, LinkedIn and GitHub has the provider options.
 - Expose login and logout functions via context
 - Track user session and expose user data (e.g., email, avatar, etc)
 - If no avatar exists for a user, attempt to retreive one from Gravatar
@@ -51,11 +51,51 @@ Implement authentication using Supabase:
 ## 5. Database Schema
 
 **Prompt:**
-Create Supabase tables:
+Create clear, relational Supabase tables considering GDPR and efficient data management:
 
-1. `comments` table with fields: `id`, `post_id`, `author`, `content`, `status`, `created_at`, `parent_id (nullable)`
-2. (Optional) `users` table with: `id`, `email`, `is_admin`
-Status should be 'pending', 'approved', or 'rejected'.
+### users table
+
+- `id`: UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE
+- `email`: TEXT UNIQUE NOT NULL
+- `username`: TEXT UNIQUE NOT NULL
+- `avatar_url`: TEXT
+- `is_admin`: BOOLEAN DEFAULT FALSE
+
+### comments table
+
+- `id`: UUID PRIMARY KEY DEFAULT uuid_generate_v4()
+- `post_id`: TEXT NOT NULL
+- `author_id`: UUID REFERENCES users(id) ON DELETE SET NULL
+- `content`: TEXT NOT NULL (Markdown-formatted content, including emoji)
+- `status`: TEXT CHECK ('pending', 'approved') DEFAULT 'pending'
+- `created_at`: TIMESTAMPTZ DEFAULT NOW()
+- `parent_id`: UUID REFERENCES comments(id) ON DELETE CASCADE (nullable)
+
+**Important Notes:**
+
+- Do not store duplicate user metadata; rely entirely on the relational link via `author_id`.
+- Explicitly document that rejected comments should be deleted immediately, not stored.
+- Clearly document in the README that GDPR compliance and obtaining user consent is the user's responsibility.
+
+**Important Notes:**
+
+- Clearly document that rejected comments should be deleted immediately, not stored.
+- Explicitly mention in the README that GDPR compliance and obtaining user consent is the user's responsibility. Briefly explain what GDPR is and provide a link to a website for further information.
+
+---
+
+## 5.5. User Sync Edge Function
+
+**Prompt:**
+Create a Supabase Edge Function to sync authenticated users into the custom `users` table.
+
+- This function should be triggered manually from the frontend after the user signs in
+- It should check if the authenticated user's ID already exists in the `users` table
+- If not, insert a new record using their `id`, `email`, `display_name` as username, and `avatar_url` (check gravatar to see if one exists against their email addresss, if not insert the default one from /src/lib/assets)
+- Avoid overwriting user records on subsequent logins
+- This function should be called from the frontend using `supabase.functions.invoke('sync-user', ...)` after the `SIGNED_IN` auth event
+- The consumer of the package does not need to invoke this function manually—syncing should be completely automatic and handled internally within the TalkToMeProvider.
+- Document this auto-sync behaviour in the README so that users are aware it is handled internally.
 
 ---
 
