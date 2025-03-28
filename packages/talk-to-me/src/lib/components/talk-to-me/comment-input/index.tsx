@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { CommentInputProps } from '@lib/types/component'
-import { getAriaLabel, getAriaDescribedBy, getAriaErrorMessage, focusElement } from '@lib/utils/accessibility'
+import { getAriaLabel, getAriaDescribedBy, focusElement } from '@lib/utils/accessibility'
 import './style.css'
 
 export const CommentInput = ({ onSubmit, isSubmitting, error }: CommentInputProps) => {

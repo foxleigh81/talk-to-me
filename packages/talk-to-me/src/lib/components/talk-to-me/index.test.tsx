@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, fireEvent, act } from '@testing-library/react'
 import { TalkToMe } from './index'
 import { useTalkToMe } from '@lib/hooks/use-talk-to-me'
-import { SupabaseClient, User } from '@supabase/supabase-js'
-import { TalkToMeContextType, TalkToMeConfig } from '@lib/types/context'
+import { SupabaseClient } from '@supabase/supabase-js'
+import { TalkToMeConfig } from '@lib/types/context'
 
 // Mock the useTalkToMe hook
 vi.mock('@lib/hooks/use-talk-to-me')

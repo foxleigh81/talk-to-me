@@ -34,7 +34,7 @@ export class AuthService {
 
   async signInWithSocial(provider: SocialProvider): Promise<AuthResponse> {
     try {
-      const { data, error } = await this.supabase.auth.signInWithOAuth({
+      const { error } = await this.supabase.auth.signInWithOAuth({
         provider,
         options: {
           redirectTo: window.location.origin,
